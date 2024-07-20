@@ -1,0 +1,43 @@
+body {
+    font-family: var(--vscode-font-family);
+    color: var(--vscode-foreground);
+    padding: 10px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+h2, h3 {
+    margin-bottom: 10px;
+    color: var(--vscode-editor-foreground);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input, .select {
+    background-color: var(--vscode-input-background);
+    color: var(--vscode-input-foreground);
+    border: 1px solid var(--vscode-input-border);
+    padding: 5px;
+    border-radius: 2px;
+}
+
+.button {
+    background-color: var(--vscode-button-background);
+    color: var(--vscode-button-foreground);
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.button:hover {
+    background-color: var(--vscode-button-hoverBackground);
+}

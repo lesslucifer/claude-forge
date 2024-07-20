@@ -41,12 +41,39 @@
       }
     ],
     "configuration": {
-      "title": "ClaudeForge",
+      "title": "Claude Forge",
       "properties": {
-        "claudeForge.apiKey": {
+        "claudeForge.gptApiKey": {
           "type": "string",
           "default": "",
-          "description": "Anthropic API Key for ClaudeForge"
+          "description": "API key for OpenAI GPT model"
+        },
+        "claudeForge.geminiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API key for Google Gemini model"
+        },
+        "claudeForge.claudeApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API key for Anthropic Claude model"
+        },
+        "claudeForge.preferredModelForAnalysis": {
+          "type": "string",
+          "default": "gpt",
+          "enum": ["gpt", "gemini", "claude"],
+          "description": "Preferred AI model to use for project analysis"
+        },
+        "claudeForge.defaultModel": {
+          "type": "string",
+          "default": "gpt-3.5-turbo",
+          "description": "Default AI model to use for project analysis"
+        },
+        "claudeForge.defaultTier": {
+          "type": "string",
+          "enum": ["pro", "fast"],
+          "default": "fast",
+          "description": "Default tier for AI model (pro = tier 1, fast = tier 2)"
         }
       }
     }
@@ -68,6 +95,7 @@
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
+    "@types/lodash": "^4.17.7",
     "@types/mocha": "^10.0.1",
     "@types/node": "20.2.5",
     "@types/vscode": "^1.80.0",
@@ -80,7 +108,13 @@
     "typescript": "^5.1.3"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.3",
+    "@google/generative-ai": "^0.15.0",
+    "@types/json-to-pretty-yaml": "^1.2.1",
     "esbuild": "^0.23.0",
-    "fs-extra": "^11.2.0"
+    "fs-extra": "^11.2.0",
+    "json-to-pretty-yaml": "^1.2.2",
+    "lodash": "^4.17.21",
+    "openai": "^4.52.7"
   }
 }
