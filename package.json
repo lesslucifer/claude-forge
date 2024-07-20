@@ -1,23 +1,55 @@
 {
   "name": "claude-forge",
   "displayName": "ClaudeForge",
-  "description": "ClaudeForge: Seamlessly integrate Claude.ai's powerful AI capabilities into VSCode. Manage projects, files, and system instructions directly in your IDE, enhancing your development workflow with AI-driven assistance",
+  "description": "Seamlessly integrate Claude.ai's powerful AI capabilities into VSCode.",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.91.0"
+    "vscode": "^1.80.0"
   },
   "categories": [
     "Other"
   ],
   "activationEvents": [],
-  "main": "./dist/extension.js",
+  "main": "./out/extension.js",
   "contributes": {
+    "views": {
+      "claudeForge": [
+        {
+          "type": "webview",
+          "id": "claudeForge.sidebarView",
+          "name": "ClaudeForge"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "claudeForge",
+          "title": "ClaudeForge",
+          "icon": "media/claude-icon.svg"
+        }
+      ]
+    },
     "commands": [
       {
-        "command": "claude-forge.helloWorld",
-        "title": "Hello World"
+        "command": "claudeForge.indexProject",
+        "title": "Index Project"
+      },
+      {
+        "command": "claudeForge.configure",
+        "title": "Configure ClaudeForge"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "ClaudeForge",
+      "properties": {
+        "claudeForge.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Anthropic API Key for ClaudeForge"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run package",
@@ -31,19 +63,24 @@
     "pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
     "check-types": "tsc --noEmit",
     "lint": "eslint src --ext ts",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "copy-media": "mkdir -p out/media && cp -R media/* out/media/"
   },
   "devDependencies": {
-    "@types/vscode": "^1.91.0",
-    "@types/mocha": "^10.0.7",
-    "@types/node": "20.x",
-    "@typescript-eslint/eslint-plugin": "^7.14.1",
-    "@typescript-eslint/parser": "^7.11.0",
-    "eslint": "^8.57.0",
-    "esbuild": "^0.21.5",
-    "npm-run-all": "^4.1.5",
-    "typescript": "^5.4.5",
-    "@vscode/test-cli": "^0.0.9",
-    "@vscode/test-electron": "^2.4.0"
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "20.2.5",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.8",
+    "@typescript-eslint/parser": "^5.59.8",
+    "@vscode/test-electron": "^2.3.2",
+    "eslint": "^8.41.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "typescript": "^5.1.3"
+  },
+  "dependencies": {
+    "esbuild": "^0.23.0",
+    "fs-extra": "^11.2.0"
   }
 }

@@ -1,71 +1,51 @@
-# claude-forge README
+# Claude Forge
 
-This is the README for your extension "claude-forge". After writing up a brief description, we recommend including the following sections.
+Claude Forge is a VS Code extension that allows you to interact with your Claude.ai projects directly from your IDE.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- List your Claude.ai projects
 
-For example if there is an image subfolder under your extension project workspace:
+## Installation
 
-\!\[feature X\]\(images/feature-x.png\)
+1. Install the Claude Forge extension from the VS Code marketplace.
+2. After installation, you need to set up your Claude.ai cookies for authentication.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Setting Up Authentication
 
-## Requirements
+This extension requires you to manually provide your Claude.ai session cookies. Here's how to do it:
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+1. Go to [Claude.ai](https://claude.ai) and log in to your account.
+2. Open your browser's developer tools (usually F12 or right-click and select "Inspect").
+3. Go to the "Network" tab.
+4. Refresh the page.
+5. Look for a request to "claude.ai" in the network tab.
+6. Click on this request and find the "Request Headers" section.
+7. Find the "Cookie" header and copy its entire value.
+8. In VS Code, go to Settings (File > Preferences > Settings).
+9. Search for "Claude Forge" in the settings search bar.
+10. Paste your copied cookie string into the "Cookie string for Claude authentication" field.
 
-## Extension Settings
+## Usage
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+After setting up your cookies, you can use the extension as follows:
 
-For example:
+1. Open the Command Palette (Ctrl+Shift+P or Cmd+Shift+P on Mac).
+2. Type "Claude Forge: List Projects" and select it.
+3. The extension will fetch and display your Claude.ai projects.
 
-This extension contributes the following settings:
+## Troubleshooting
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+If you encounter any issues:
 
-## Known Issues
+1. Make sure your cookie is correctly set in the extension settings.
+2. Your session might have expired. Try logging out and back in to Claude.ai, then update your cookie in the VS Code settings.
+3. Ensure you've copied the entire cookie string, including all key-value pairs.
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+## Privacy and Security
 
-## Release Notes
+This extension stores your Claude.ai session cookie locally on your machine. Never share this cookie with anyone, as it provides access to your Claude.ai account. The extension does not send this data anywhere except to Claude.ai for authentication purposes.
 
-Users appreciate release notes as you update your extension.
+## Feedback and Contributions
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+If you encounter any issues or have suggestions for improvements, please file an issue on our GitHub repository. Contributions are welcome!
