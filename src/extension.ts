@@ -16,7 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   let configureCommand = vscode.commands.registerCommand('claudeForge.configure', () => {
-    vscode.commands.executeCommand('workbench.action.openSettings', 'claudeForge');
+    vscode.commands.executeCommand('workbench.view.extension.claudeForge');
   });
 
   context.subscriptions.push(indexProjectCommand, configureCommand);
@@ -165,6 +165,8 @@ export function extractKeywords(content: string, language: string): string[] {
 }
 
 async function indexProject() {
+  console.log('Project indexed');
+
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders) {
     vscode.window.showErrorMessage('No workspace folder open');
@@ -191,6 +193,7 @@ async function indexProject() {
   await analyzeProject(indexData);
 
   vscode.window.showInformationMessage('Project indexed successfully');
+  await vscode.commands.executeCommand('claudeForge.sidebarView.refresh');
 }
 
 export function deactivate() {

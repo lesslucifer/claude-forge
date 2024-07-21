@@ -37,7 +37,7 @@
       },
       {
         "command": "claudeForge.configure",
-        "title": "Configure ClaudeForge"
+        "title": "Open ClaudeForge"
       }
     ],
     "configuration": {
@@ -61,7 +61,11 @@
         "claudeForge.preferredModelForAnalysis": {
           "type": "string",
           "default": "gpt",
-          "enum": ["gpt", "gemini", "claude"],
+          "enum": [
+            "gpt",
+            "gemini",
+            "claude"
+          ],
           "description": "Preferred AI model to use for project analysis"
         },
         "claudeForge.defaultModel": {
@@ -71,7 +75,10 @@
         },
         "claudeForge.defaultTier": {
           "type": "string",
-          "enum": ["pro", "fast"],
+          "enum": [
+            "pro",
+            "fast"
+          ],
           "default": "fast",
           "description": "Default tier for AI model (pro = tier 1, fast = tier 2)"
         }
