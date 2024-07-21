@@ -1,4 +1,4 @@
-(function() {
+(function () {
     const vscode = acquireVsCodeApi();
 
     let selectedFiles = new Set();
@@ -21,8 +21,7 @@
             gptApiKey: document.getElementById('gptApiKey').value,
             geminiApiKey: document.getElementById('geminiApiKey').value,
             claudeApiKey: document.getElementById('claudeApiKey').value,
-            preferredModelForAnalysis: document.getElementById('preferredModel').value,
-            defaultModel: document.getElementById('defaultModel').value,
+            preferredModelFamily: document.getElementById('preferredModel').value,
             defaultTier: document.getElementById('defaultTier').value,
         };
         vscode.postMessage({ type: 'updateConfiguration', config });
@@ -33,6 +32,9 @@
         if (e.key === 'Enter') {
             sendMessage();
         }
+    });
+    document.getElementById('userInput').addEventListener('input', (e) => {
+        document.getElementById('aiSelectFiles').disabled = e.target.value.trim() === '';
     });
 
     document.getElementById('removeAllSelectedFiles').addEventListener('click', () => {
@@ -50,6 +52,27 @@
 
     document.getElementById('unselectedFilesSearch').addEventListener('input', (e) => {
         filterFiles(e.target.value, 'unselectedFileList');
+    });
+
+    document.getElementById('aiSelectFiles').addEventListener('click', () => {
+        const userInput = document.getElementById('userInput').value.trim();
+        if (!userInput) {
+            vscode.postMessage({ type: 'showToast', message: 'Please enter a message before using AI file selection.' });
+            return;
+        }
+        vscode.postMessage({ type: 'aiSelectFiles', userInput });
+    });
+
+    // Update the existing sendMessage event listener
+    document.getElementById('sendMessage').addEventListener('click', () => {
+        const userInput = document.getElementById('userInput');
+        const message = userInput.value.trim();
+        if (message) {
+            addMessageToChat('You', message);
+            vscode.postMessage({ type: 'sendMessage', message });
+            userInput.value = '';
+            document.getElementById('aiSelectFiles').disabled = true;
+        }
     });
 
     function filterFiles(query, listId) {
@@ -86,7 +109,7 @@
     function createFileItem(file) {
         const fileItem = document.createElement('div');
         fileItem.classList.add('file-item');
-        
+
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.value = file.path;
@@ -101,13 +124,13 @@
             }
             updateFileList();
         });
-        
+
         const label = document.createElement('label');
         label.textContent = `${file.path} (${file.language})`;
-        
+
         fileItem.appendChild(checkbox);
         fileItem.appendChild(label);
-        
+
         return fileItem;
     }
 
@@ -138,6 +161,18 @@
     // Request initial file list and configuration
     vscode.postMessage({ type: 'getFiles' });
     vscode.postMessage({ type: 'getConfiguration' });
+    
+
+    function updateSelectedFiles(files) {
+        files.forEach(file => {
+            const checkbox = document.querySelector(`#unselectedFileList input[value="${CSS.escape(file)}"]`);
+            if (checkbox) {
+                checkbox.checked = true;
+                moveFileItem(checkbox.closest('.file-item'), 'selectedFileList');
+            }
+        });
+        updateFileList();
+    }
 
     // Listen for messages from the extension
     window.addEventListener('message', event => {
@@ -161,6 +196,9 @@
             case 'configuration':
                 updateConfigurationFields(message.config);
                 break;
+            case 'updateSelectedFiles':
+                updateSelectedFiles(message.files);
+                break;
         }
     });
 
@@ -168,8 +206,7 @@
         document.getElementById('gptApiKey').value = config.gptApiKey || '';
         document.getElementById('geminiApiKey').value = config.geminiApiKey || '';
         document.getElementById('claudeApiKey').value = config.claudeApiKey || '';
-        document.getElementById('preferredModel').value = config.preferredModelForAnalysis || 'gpt';
-        document.getElementById('defaultModel').value = config.defaultModel || 'gpt-4o-mini';
+        document.getElementById('preferredModel').value = config.preferredModelFamily || 'gpt';
         document.getElementById('defaultTier').value = config.defaultTier || 'fast';
     }
 }());

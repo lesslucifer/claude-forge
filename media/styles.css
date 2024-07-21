@@ -178,6 +178,23 @@ input[type="text"]::placeholder {
     color: var(--vscode-errorForeground);
 }
 
+.button {
+    background-color: var(--vscode-button-background);
+    color: var(--vscode-button-foreground);
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.button:hover {
+    background-color: var(--vscode-button-hoverBackground);
+}
+
+#sendMessage, #aiSelectFiles {
+    margin-left: 5px;
+}
+
 .chat-window {
     height: 40vh;
 }

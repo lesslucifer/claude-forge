@@ -56,7 +56,7 @@ export class ClaudeModel implements IAIModel {
 
     private convertPromptToAnthropicFormat(prompt: IAIModelPrompt): MessageParam {
         const role = this.mapRoleToAnthropic(prompt.role);
-        const content = prompt.parts.map(this.convertPartToAnthropicFormat).join('\n');
+        const content = prompt.parts.map(this.convertPartToAnthropicFormat);
 
         return { role, content };
     }

@@ -58,7 +58,7 @@
           "default": "",
           "description": "API key for Anthropic Claude model"
         },
-        "claudeForge.preferredModelForAnalysis": {
+        "claudeForge.preferredModelFamily": {
           "type": "string",
           "default": "gpt",
           "enum": [
@@ -67,11 +67,6 @@
             "claude"
           ],
           "description": "Preferred AI model to use for project analysis"
-        },
-        "claudeForge.defaultModel": {
-          "type": "string",
-          "default": "gpt-3.5-turbo",
-          "description": "Default AI model to use for project analysis"
         },
         "claudeForge.defaultTier": {
           "type": "string",

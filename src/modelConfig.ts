@@ -14,7 +14,7 @@ interface ModelInfo {
 }
 
 const modelInfoMap: { [key: string]: ModelInfo } = {
-    'claude-3-sonnet-20240229': { family: 'claude', tier: 'pro', modelClass: ClaudeModel },
+    'claude-3-5-sonnet-20240620': { family: 'claude', tier: 'pro', modelClass: ClaudeModel },
     'claude-3-haiku-20240307': { family: 'claude', tier: 'fast', modelClass: ClaudeModel },
     'gpt-4': { family: 'gpt', tier: 'pro', modelClass: GPTModel },
     'gpt-4o-mini': { family: 'gpt', tier: 'fast', modelClass: GPTModel },
@@ -33,7 +33,7 @@ export function getConfiguredModel(preferredFamily?: ModelFamily, preferredTier?
     const gptApiKey = config.get('gptApiKey', '');
     const geminiApiKey = config.get('geminiApiKey', '');
     const claudeApiKey = config.get('claudeApiKey', '');
-    const defaultModel = config.get('defaultModel', 'gpt-3.5-turbo');
+    const preferredModelFamily = config.get('preferredModelFamily', 'gpt');
     const defaultTier = config.get('defaultTier', 'fast') as ModelTier;
 
     const apiKeys: { [key in ModelFamily]: string } = {
@@ -42,17 +42,15 @@ export function getConfiguredModel(preferredFamily?: ModelFamily, preferredTier?
         'claude': claudeApiKey,
     };
 
+    preferredFamily ??= preferredModelFamily;
+    preferredTier ??= defaultTier;
+
     // Check if the preferred family and tier are available
     if (preferredFamily && preferredTier && apiKeys[preferredFamily]) {
         const model = getModelByFamilyAndTier(preferredFamily, preferredTier);
         if (model) {
             return new modelInfoMap[model].modelClass(apiKeys[preferredFamily], model);
         }
-    }
-
-    // Check if the default model's API key is configured
-    if (apiKeys[modelInfoMap[defaultModel].family]) {
-        return new modelInfoMap[defaultModel].modelClass(apiKeys[modelInfoMap[defaultModel].family], defaultModel);
     }
 
     // Find the first available model with API key

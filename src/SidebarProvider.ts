@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import { performAIFileSelection } from './aiFileSelector';
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
   private _view?: vscode.WebviewView;
@@ -37,6 +38,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           break;
         case 'updateConfiguration':
           await this._updateConfiguration(data.config);
+          break;
+        case 'aiSelectFiles':
+          await this._handleAIFileSelection(data.userInput, webviewView.webview);
+          break;
+        case 'showToast':
+          vscode.window.showInformationMessage(data.message);
           break;
       }
     });
@@ -82,6 +89,25 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     webview.postMessage({ type: 'aiResponse', message: response });
   }
 
+  private async _handleAIFileSelection(userInput: string, webview: vscode.Webview) {
+    try {
+      const selectedFiles = await performAIFileSelection(userInput);
+      webview.postMessage({ type: 'updateSelectedFiles', files: selectedFiles });
+    } catch (error) {
+      if (error.message === 'Project index not found') {
+        const result = await vscode.window.showInformationMessage(
+          'Project index not found. Do you want to run the indexing process?',
+          'Yes', 'No'
+        );
+        if (result === 'Yes') {
+          vscode.commands.executeCommand('claudeForge.indexProject');
+        }
+      } else {
+        vscode.window.showErrorMessage(`Failed to perform AI file selection: ${error.message}`);
+      }
+    }
+  }
+
   private _showSettingsView(webview: vscode.Webview) {
     webview.postMessage({ type: 'showSettings' });
     this._sendConfiguration(webview);
@@ -96,8 +122,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     const gptApiKey = config.get('gptApiKey', '');
     const geminiApiKey = config.get('geminiApiKey', '');
     const claudeApiKey = config.get('claudeApiKey', '');
-    const preferredModelForAnalysis = config.get('preferredModelForAnalysis', 'gpt');
-    const defaultModel = config.get('defaultModel', 'gpt-4o-mini');
+    const preferredModelFamily = config.get('preferredModelFamily', 'gpt');
     const defaultTier = config.get('defaultTier', 'fast');
 
     webview.postMessage({
@@ -106,8 +131,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         gptApiKey,
         geminiApiKey,
         claudeApiKey,
-        preferredModelForAnalysis,
-        defaultModel,
+        preferredModelFamily,
         defaultTier
       },
     });
@@ -118,8 +142,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     await config.update('gptApiKey', newConfig.gptApiKey, vscode.ConfigurationTarget.Global);
     await config.update('geminiApiKey', newConfig.geminiApiKey, vscode.ConfigurationTarget.Global);
     await config.update('claudeApiKey', newConfig.claudeApiKey, vscode.ConfigurationTarget.Global);
-    await config.update('preferredModelForAnalysis', newConfig.preferredModelForAnalysis, vscode.ConfigurationTarget.Global);
-    await config.update('defaultModel', newConfig.defaultModel, vscode.ConfigurationTarget.Global);
+    await config.update('preferredModelFamily', newConfig.preferredModelFamily, vscode.ConfigurationTarget.Global);
     await config.update('defaultTier', newConfig.defaultTier, vscode.ConfigurationTarget.Global);
   }
 
@@ -163,7 +186,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 <div id="chatMessages"></div>
                 <div class="input-area">
                     <input type="text" id="userInput" placeholder="Type your message...">
-                    <button id="sendMessage">Send</button>
+                    <button id="sendMessage" class="button">Send</button>
+                    <button id="aiSelectFiles" class="button" title="AI-assisted file selection" disabled>🤖</button>
                 </div>
             </div>
         </div>
@@ -190,17 +214,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                     <option value="gpt">GPT</option>
                     <option value="gemini">Gemini</option>
                     <option value="claude">Claude</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="defaultModel">Default Model:</label>
-                <select id="defaultModel" class="select">
-                    <option value="claude-3-sonnet-20240229">Claude 3 Sonnet</option>
-                    <option value="claude-3-haiku-20240307">Claude 3 Haiku</option>
-                    <option value="gpt-4">GPT-4</option>
-                    <option value="gpt-4o-mini">GPT-4o Mini</option>
-                    <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
-                    <option value="gemini-1.5-flash-latest">Gemini 1.5 Flash</option>
                 </select>
             </div>
             <div class="form-group">
