@@ -45,6 +45,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         case 'showToast':
           vscode.window.showInformationMessage(data.message);
           break;
+        case 'indexProject':
+          vscode.commands.executeCommand('claudeForge.indexProject');
+          break;
       }
     });
   }
@@ -78,6 +81,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   }
 
   public refresh() {
+    console.log(`[REFRESH]`);
     if (this._view) {
       this._sendFileList(this._view.webview);
     }
@@ -149,6 +153,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   private _getHtmlForWebview(webview: vscode.Webview) {
     const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
     const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'styles.css'));
+    const reactUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'react.production.min.js'));
+    const reactDOMUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'react-dom.production.min.js'));
+    const appUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'app.js'));
 
     return `<!DOCTYPE html>
     <html lang="en">
@@ -159,72 +166,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         <link href="${styleUri}" rel="stylesheet">
     </head>
     <body>
-        <div id="mainView" class="container">
-            <div class="header">
-                <h2>ClaudeForge</h2>
-                <div>
-                    <button id="indexButton" class="icon-button">🔄</button>
-                    <button id="settingsButton" class="icon-button">⚙️</button>
-                </div>
-            </div>
-            <div class="file-lists">
-                <div class="file-list">
-                    <h3>Selected Files</h3>
-                    <div class="file-list-header">
-                        <input type="text" id="selectedFilesSearch" placeholder="Search selected files...">
-                        <button id="removeAllSelectedFiles" class="icon-button" title="Remove all selected files">🗑️</button>
-                    </div>
-                    <div id="selectedFileList" class="file-list-content"></div>
-                </div>
-                <div class="file-list">
-                    <h3>Unselected Files</h3>
-                    <input type="text" id="unselectedFilesSearch" placeholder="Search unselected files...">
-                    <div id="unselectedFileList" class="file-list-content"></div>
-                </div>
-            </div>
-            <div class="chat-window">
-                <div id="chatMessages"></div>
-                <div class="input-area">
-                    <input type="text" id="userInput" placeholder="Type your message...">
-                    <button id="sendMessage" class="button">Send</button>
-                    <button id="aiSelectFiles" class="button" title="AI-assisted file selection" disabled>🤖</button>
-                </div>
-            </div>
-        </div>
-        <div id="settingsView" class="container" style="display:none;">
-            <div class="header">
-                <h2>Settings</h2>
-                <button id="backButton" class="icon-button">←</button>
-            </div>
-            <div class="form-group">
-                <label for="gptApiKey">GPT API Key:</label>
-                <input type="password" id="gptApiKey" class="input">
-            </div>
-            <div class="form-group">
-                <label for="geminiApiKey">Gemini API Key:</label>
-                <input type="password" id="geminiApiKey" class="input">
-            </div>
-            <div class="form-group">
-                <label for="claudeApiKey">Claude API Key:</label>
-                <input type="password" id="claudeApiKey" class="input">
-            </div>
-            <div class="form-group">
-                <label for="preferredModel">Preferred Model:</label>
-                <select id="preferredModel" class="select">
-                    <option value="gpt">GPT</option>
-                    <option value="gemini">Gemini</option>
-                    <option value="claude">Claude</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="defaultTier">Default Tier:</label>
-                <select id="defaultTier" class="select">
-                    <option value="pro">Pro (Tier 1)</option>
-                    <option value="fast">Fast (Tier 2)</option>
-                </select>
-            </div>
-            <button id="saveConfig" class="button">Save Configuration</button>
-        </div>
+        <div id="root"></div>
+        <script src="${reactUri}"></script>
+        <script src="${reactDOMUri}"></script>
+        <script src="${appUri}"></script>
         <script src="${scriptUri}"></script>
     </body>
     </html>`;

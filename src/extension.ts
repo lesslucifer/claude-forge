@@ -165,7 +165,8 @@ export function extractKeywords(content: string, language: string): string[] {
 }
 
 async function indexProject() {
-  console.log('Project indexed');
+  console.log("claudeForge.indexProject");
+  console.log('Project indexing');
 
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders) {
