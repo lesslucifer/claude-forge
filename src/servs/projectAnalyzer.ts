@@ -1,10 +1,7 @@
-import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { GPTModel } from './models/gpt';
-import { GeminiModel } from './models/gemini';
-import { ClaudeModel } from './models/claude';
-import { IAIModel, IAIModelGenerationRequest } from './models/base';
+import * as vscode from 'vscode';
+import { IAIModel, IAIModelGenerationRequest } from '../models/base';
 import { getConfiguredModel } from './modelConfig';
 
 export async function analyzeProject(indexData: string) {
@@ -29,8 +26,8 @@ export async function analyzeProject(indexData: string) {
         await vscode.window.showTextDocument(document);
 
         vscode.window.showInformationMessage('Project analysis completed. Results saved to project-analysis.md');
-    } catch (error) {
-        vscode.window.showErrorMessage(`Failed to analyze project: ${error.message}`);
+    } catch (error: any) {
+        vscode.window.showErrorMessage(`Failed to analyze project: ${error?.message}`);
     }
 }
 

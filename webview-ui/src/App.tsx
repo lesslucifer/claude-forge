@@ -1,21 +1,82 @@
-import { vscode } from "./utilities/vscode";
-import { VSCodeButton } from "@vscode/webview-ui-toolkit/react";
-import "./App.css";
+import React, { useState, useEffect, useCallback } from 'react';
+import FileList from './FileList';
+import ChatWindow from './ChatWindow';
+import SettingsView, { ExtensionConfig } from './SettingsView';
+import './App.css'
+import { vscode } from './utilities/vscode';
 
-function App() {
-  function handleHowdyClick() {
-    vscode.postMessage({
-      command: "hello",
-      text: "Hey there partner! 🤠",
-    });
-  }
+const App: React.FC = () => {
+  const [view, setView] = useState('main');
+  const [files, setFiles] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState(new Set<string>());
+  const [messages, setMessages] = useState<any[]>([]);
+  const [config, setConfig] = useState<ExtensionConfig>({});
+
+  const handleMessage = useCallback((event: any) => {
+    const message = event.data;
+    switch (message.type) {
+      case 'fileList':
+        setFiles(message.files);
+        break;
+      case 'aiResponse':
+        setMessages(messages => [...messages, { sender: 'AI', text: message.message }]);
+        break;
+      case 'showSettings':
+        setView('settings');
+        break;
+      case 'showMain':
+        setView('main');
+        break;
+      case 'configuration':
+        setConfig(message.config);
+        break;
+      case 'updateSelectedFiles':
+        setSelectedFiles(new Set(message.files));
+        break;
+    }
+  }, []);
+
+  useEffect(() => {
+    vscode.postMessage({ type: 'getFiles' });
+    vscode.postMessage({ type: 'getConfiguration' });
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [handleMessage]);
+
+  const sendMessage = (message: any) => {
+    setMessages([...messages, { sender: 'You', text: message }]);
+    vscode.postMessage({ type: 'sendMessage', message });
+  };
+
+  const updateSelectedFiles = (newSelectedFiles: any) => {
+    setSelectedFiles(newSelectedFiles);
+    vscode.postMessage({ type: 'updateFileList', selectedFiles: Array.from(newSelectedFiles) });
+  };
 
   return (
-    <main>
-      <h1>Hello World!</h1>
-      <VSCodeButton onClick={handleHowdyClick}>Howdy!</VSCodeButton>
-    </main>
+    <div className="container">
+      {view === 'main' ? (
+        <>
+          <FileList
+            files={files}
+            selectedFiles={selectedFiles}
+            updateSelectedFiles={updateSelectedFiles}
+          />
+          <ChatWindow
+            messages={messages}
+            sendMessage={sendMessage}
+          />
+        </>
+      ) : (
+        <SettingsView
+          config={config}
+          updateConfig={(newConfig) => vscode.postMessage({ type: 'updateConfiguration', config: newConfig })}
+          backToMain={() => setView('main')}
+        />
+      )}
+    </div>
   );
-}
+};
 
 export default App;

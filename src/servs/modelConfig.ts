@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { GPTModel } from './models/gpt';
-import { GeminiModel } from './models/gemini';
-import { ClaudeModel } from './models/claude';
-import { IAIModel } from './models/base';
+import { GPTModel } from '../models/gpt';
+import { GeminiModel } from '../models/gemini';
+import { ClaudeModel } from '../models/claude';
+import { IAIModel } from '../models/base';
 
 type ModelTier = 'pro' | 'fast';
 type ModelFamily = 'claude' | 'gpt' | 'gemini';

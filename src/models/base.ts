@@ -1,4 +1,4 @@
-import _ from "lodash"
+import _ from "lodash";
 
 export type IAIModelPromptRole = 'user' | 'model' | 'function'
 
@@ -32,7 +32,7 @@ export function mkPrompt(prompt: IAIModelDynamicPrompt): IAIModelPrompt {
     if (_.isString(prompt)) {
         return {
             role: 'user',
-            parts: [{ text: prompt }]
+            parts: [{ text: prompt as string }]
         };
     }
 

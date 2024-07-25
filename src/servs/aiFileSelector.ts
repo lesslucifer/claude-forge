@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { IAIModel, IAIModelGenerationRequest } from './models/base';
+import { IAIModel, IAIModelGenerationRequest } from '../models/base';
 import { getConfiguredModel } from './modelConfig';
 
 export async function performAIFileSelection(userInput: string): Promise<string[]> {

@@ -1,12 +1,11 @@
-import { commands, ExtensionContext } from "vscode";
-import { HelloWorldPanel } from "./panels/HelloWorldPanel";
+import * as vscode from 'vscode';
+import { SidebarProvider } from './panels/SidebarProvider.ts';
 
-export function activate(context: ExtensionContext) {
-  // Create the show hello world command
-  const showHelloWorldCommand = commands.registerCommand("hello-world.showHelloWorld", () => {
-    HelloWorldPanel.render(context.extensionUri);
-  });
+export function activate(context: vscode.ExtensionContext) {
+  console.log(`Activate ClaudeForge`, context);
+  const sidebarProvider = new SidebarProvider(context.extensionUri);
 
-  // Add command to the extension context
-  context.subscriptions.push(showHelloWorldCommand);
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider("claudeForge.sidebarView", sidebarProvider)
+  );
 }
