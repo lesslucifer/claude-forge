@@ -1,51 +1,37 @@
-# Claude Forge
+# Hello World (React + Create React App)
 
-Claude Forge is a VS Code extension that allows you to interact with your Claude.ai projects directly from your IDE.
+This is an implementation of the default [Hello World](https://github.com/microsoft/vscode-webview-ui-toolkit-samples/tree/main/default/hello-world) sample extension that demonstrates how to set up and use a [React](https://reactjs.org/) + [Create React App](https://create-react-app.dev/) + [Webview UI Toolkit](https://github.com/microsoft/vscode-webview-ui-toolkit) webview extension.
 
-## Features
+![A screenshot of the sample extension.](./assets/hello-world.png)
 
-- List your Claude.ai projects
+## Documentation
 
-## Installation
+For a deeper dive into how this sample works, read the guides below.
 
-1. Install the Claude Forge extension from the VS Code marketplace.
-2. After installation, you need to set up your Claude.ai cookies for authentication.
+- [Extension structure](./docs/extension-structure.md)
+- [Extension commands](./docs/extension-commands.md)
+- [Extension development cycle](./docs/extension-development-cycle.md)
 
-## Setting Up Authentication
+## Run The Sample
 
-This extension requires you to manually provide your Claude.ai session cookies. Here's how to do it:
+```bash
+# Copy sample extension locally
+npx degit microsoft/vscode-webview-ui-toolkit-samples/frameworks/hello-world-react-cra hello-world
 
-1. Go to [Claude.ai](https://claude.ai) and log in to your account.
-2. Open your browser's developer tools (usually F12 or right-click and select "Inspect").
-3. Go to the "Network" tab.
-4. Refresh the page.
-5. Look for a request to "claude.ai" in the network tab.
-6. Click on this request and find the "Request Headers" section.
-7. Find the "Cookie" header and copy its entire value.
-8. In VS Code, go to Settings (File > Preferences > Settings).
-9. Search for "Claude Forge" in the settings search bar.
-10. Paste your copied cookie string into the "Cookie string for Claude authentication" field.
+# Navigate into sample directory
+cd hello-world
 
-## Usage
+# Install dependencies for both the extension and webview UI source code
+npm run install:all
 
-After setting up your cookies, you can use the extension as follows:
+# Build webview UI source code
+npm run build:webview
 
-1. Open the Command Palette (Ctrl+Shift+P or Cmd+Shift+P on Mac).
-2. Type "Claude Forge: List Projects" and select it.
-3. The extension will fetch and display your Claude.ai projects.
+# Open sample in VS Code
+code .
+```
 
-## Troubleshooting
+Once the sample is open inside VS Code you can run the extension by doing the following:
 
-If you encounter any issues:
-
-1. Make sure your cookie is correctly set in the extension settings.
-2. Your session might have expired. Try logging out and back in to Claude.ai, then update your cookie in the VS Code settings.
-3. Ensure you've copied the entire cookie string, including all key-value pairs.
-
-## Privacy and Security
-
-This extension stores your Claude.ai session cookie locally on your machine. Never share this cookie with anyone, as it provides access to your Claude.ai account. The extension does not send this data anywhere except to Claude.ai for authentication purposes.
-
-## Feedback and Contributions
-
-If you encounter any issues or have suggestions for improvements, please file an issue on our GitHub repository. Contributions are welcome!
+1. Press `F5` to open a new Extension Development Host window
+2. Inside the host window, open the command palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac) and type `Hello World (React + CRA): Show`
