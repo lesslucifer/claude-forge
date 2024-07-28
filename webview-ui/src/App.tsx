@@ -7,7 +7,6 @@ import { vscode } from './utilities/vscode';
 
 const App: React.FC = () => {
   const [view, setView] = useState('main');
-  const [files, setFiles] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState(new Set<string>());
   const [messages, setMessages] = useState<any[]>([]);
   const [config, setConfig] = useState<ExtensionConfig>({});
@@ -15,9 +14,6 @@ const App: React.FC = () => {
   const handleMessage = useCallback((event: any) => {
     const message = event.data;
     switch (message.type) {
-      case 'fileList':
-        setFiles(message.files);
-        break;
       case 'aiResponse':
         setMessages(messages => [...messages, { sender: 'AI', text: message.message }]);
         break;
@@ -59,7 +55,6 @@ const App: React.FC = () => {
       {view === 'main' ? (
         <>
           <FileList
-            files={files}
             selectedFiles={selectedFiles}
             updateSelectedFiles={updateSelectedFiles}
           />

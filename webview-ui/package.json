@@ -7,7 +7,7 @@
     "build": "cross-env node ./scripts/build-react-no-split.js",
     "test": "cross-env EXTEND_ESLINT=true react-scripts test",
     "eject": "cross-env react-scripts eject"
-  },
+  },  
   "dependencies": {
     "@vscode/webview-ui-toolkit": "^1.2.2",
     "react": "^17.0.2",

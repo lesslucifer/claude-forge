@@ -78,6 +78,7 @@
   },
   "scripts": {
     "install:all": "npm install && cd webview-ui && npm install",
+    "dev": "cross-env NODE_ENV=development vscode-test-web --extensionDevelopmentPath=. .",
     "start:webview": "cd webview-ui && npm run start",
     "build:webview": "cd webview-ui && npm run build",
     "test:webview": "cd webview-ui && npm run test",

@@ -49,7 +49,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, sendMessage }) => {
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder="Type your message... (Shift+Enter for new line)"
+          placeholder="Type your message..."
         />
         <button onClick={handleSendMessage} className="button">Send</button>
       </div>
