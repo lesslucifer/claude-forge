@@ -6,6 +6,7 @@ interface File {
   path: string;
   language: string;
   linesOfCode: number;
+  keywords: string[];
 }
 
 interface FileListProps {
@@ -17,8 +18,8 @@ const FileList: React.FC<FileListProps> = ({ selectedFiles, updateSelectedFiles 
   const [allFiles, setAllFiles] = useState<File[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSelectedOnly, setShowSelectedOnly] = useState(false);
-  const [indexError, setIndexError] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isIndexing, setIsIndexing] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,17 +40,23 @@ const FileList: React.FC<FileListProps> = ({ selectedFiles, updateSelectedFiles 
     vscode.postMessage({ type: 'loadFileIndex' });
   };
 
+  const indexProject = () => {
+    setIsIndexing(true);
+    vscode.postMessage({ type: 'indexProject' });
+  };
+
   useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
+      console.log("Event", event.data)
       const message = event.data;
       switch (message.type) {
         case 'fileIndex':
           setAllFiles(message.files);
-          setIndexError(false);
+          setIsIndexing(false);
           break;
         case 'fileIndexError':
           console.error('Error loading file index:', message.error);
-          setIndexError(true);
+          setIsIndexing(false);
           break;
       }
     };
@@ -81,13 +88,13 @@ const FileList: React.FC<FileListProps> = ({ selectedFiles, updateSelectedFiles 
     setShowDropdown(false);
   };
 
-  const filteredFiles = allFiles.filter(file => 
+  const filteredFiles = allFiles.filter(file =>
     file.path.toLowerCase().includes(searchQuery.toLowerCase()) &&
     (!showSelectedOnly || selectedFiles.has(file.path))
   );
 
   const selectedFilesCount = selectedFiles.size;
-  const selectedLinesOfCode = allFiles.reduce((sum, file) => 
+  const selectedLinesOfCode = allFiles.reduce((sum, file) =>
     selectedFiles.has(file.path) ? sum + file.linesOfCode : sum, 0
   );
 
@@ -113,10 +120,18 @@ const FileList: React.FC<FileListProps> = ({ selectedFiles, updateSelectedFiles 
       <div className="file-list-info">
         {selectedFilesCount} files selected ({selectedLinesOfCode} LOC)
       </div>
-      {indexError ? (
+      {allFiles.length === 0 ? (
         <div className="index-error">
-          <p>Error loading file index.</p>
-          <button onClick={loadFileIndex}>Index Project</button>
+          <button onClick={indexProject} disabled={isIndexing}>
+            {isIndexing ? (
+              <>
+                <span className="spinner"></span>
+                Indexing...
+              </>
+            ) : (
+              'Index Project'
+            )}
+          </button>
         </div>
       ) : (
         <div className="file-list-content">

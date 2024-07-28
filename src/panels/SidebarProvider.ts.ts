@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
+import { indexProject } from '../servs/projectIndex';
+import * as path from 'path';
 
 const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
 
@@ -126,9 +128,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     const indexFilePath = vscode.Uri.joinPath(rootPath, '.claude-forge.txt');
   
     try {
-      // Implement your project indexing logic here
-      // This is a placeholder for the actual indexing process
-      await this._indexProjectFiles(rootPath, indexFilePath);
+      await indexProject(rootPath, indexFilePath);
   
       // After indexing, read the new index file and send it back
       const newIndexContent = await vscode.workspace.fs.readFile(indexFilePath);
@@ -137,14 +137,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     } catch (error: any) {
       webview.postMessage({ type: 'fileIndexError', error: error.message });
     }
-  }
-  
-  private async _indexProjectFiles(rootPath: vscode.Uri, indexFilePath: vscode.Uri): Promise<void> {
-    // This is where you would implement the actual file indexing logic
-    // For now, we'll just create a dummy index file
-    const dummyContent = 'Filename: example.ts\nLanguage: TypeScript\nLines of Code: 100\n\n' +
-                         'Filename: another.js\nLanguage: JavaScript\nLines of Code: 50\n';
-    await vscode.workspace.fs.writeFile(indexFilePath, Buffer.from(dummyContent, 'utf8'));
   }
   
   private _parseIndexContent(content: string): File[] {
