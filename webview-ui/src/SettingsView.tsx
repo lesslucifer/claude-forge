@@ -1,6 +1,7 @@
 // components/SettingsView.tsx
 
 import React, { useState, useEffect } from 'react';
+import './SettingsView.css'
 
 export interface ExtensionConfig {
     gptApiKey?: string;

@@ -1,6 +1,7 @@
 // components/ChatWindow.tsx
 
 import React, { useState, useRef, useEffect } from 'react';
+import './ChatWindow.css'
 
 interface Message {
   sender: string;

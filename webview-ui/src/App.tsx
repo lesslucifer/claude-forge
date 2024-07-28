@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import FileList from './FileList';
+import React, { useCallback, useEffect, useState } from 'react';
+import './App.css';
 import ChatWindow from './ChatWindow';
+import FileList from './FileList';
 import SettingsView, { ExtensionConfig } from './SettingsView';
-import './App.css'
 import { vscode } from './utilities/vscode';
 
 const App: React.FC = () => {
@@ -40,33 +40,43 @@ const App: React.FC = () => {
     return () => window.removeEventListener('message', handleMessage);
   }, [handleMessage]);
 
-  const sendMessage = (message: any) => {
+  const sendMessage = (message: string) => {
     setMessages([...messages, { sender: 'You', text: message }]);
     vscode.postMessage({ type: 'sendMessage', message });
   };
 
-  const updateSelectedFiles = (newSelectedFiles: any) => {
-    setSelectedFiles(newSelectedFiles);
-    vscode.postMessage({ type: 'updateFileList', selectedFiles: Array.from(newSelectedFiles) });
+  const updateConfig = (newConfig: ExtensionConfig) => {
+    setConfig(newConfig);
+    vscode.postMessage({ type: 'updateConfiguration', config: newConfig });
   };
 
   return (
     <div className="container">
-      {view === 'main' ? (
+      {view === 'main' && (
         <>
-          <FileList
-            selectedFiles={selectedFiles}
-            updateSelectedFiles={updateSelectedFiles}
-          />
-          <ChatWindow
-            messages={messages}
-            sendMessage={sendMessage}
-          />
+          <details open className="files-section">
+            <summary>Files</summary>
+            <FileList
+              selectedFiles={selectedFiles}
+              updateSelectedFiles={setSelectedFiles}
+            />
+          </details>
+
+          <details className="files-section" open>
+            <summary>Chat</summary>
+            <ChatWindow messages={messages} sendMessage={sendMessage} />
+          </details>
+
+          <button onClick={() => setView('settings')} className="button settings-button">
+            Settings
+          </button>
         </>
-      ) : (
+      )}
+
+      {view === 'settings' && (
         <SettingsView
           config={config}
-          updateConfig={(newConfig) => vscode.postMessage({ type: 'updateConfiguration', config: newConfig })}
+          updateConfig={updateConfig}
           backToMain={() => setView('main')}
         />
       )}

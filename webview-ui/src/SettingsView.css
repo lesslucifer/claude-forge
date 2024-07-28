@@ -1,0 +1,28 @@
+.settings-view {
+    padding: 16px;
+}
+
+.settings-view h2 {
+    margin-bottom: 16px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.input,
+.select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 8px;
+}
+
+.button {
+    margin-top: 16px;
+    margin-right: 8px;
+}

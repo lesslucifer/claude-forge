@@ -4,33 +4,12 @@ body {
   padding: 10px;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 h2,
 h3 {
   margin-bottom: 10px;
   color: var(--vscode-editor-foreground);
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.input,
-.select {
-  background-color: var(--vscode-input-background);
-  color: var(--vscode-input-foreground);
-  border: 1px solid var(--vscode-input-border);
-  padding: 5px;
-  border-radius: 2px;
-}
-
 .button {
   background-color: var(--vscode-button-background);
   color: var(--vscode-button-foreground);
@@ -42,166 +21,58 @@ h3 {
 
 .button:hover {
   background-color: var(--vscode-button-hoverBackground);
+}
+
+details {
+  border-bottom: 1px solid var(--vscode-widget-border);
+}
+
+summary {
+  padding: 8px;
+  font-weight: bold;
+  background-color: var(--vscode-sideBar-background);
+  cursor: pointer;
+  user-select: none;
+}
+
+summary:hover {
+  background-color: var(--vscode-list-hoverBackground);
+}
+
+summary:focus {
+  outline: none;
+  background-color: var(--vscode-list-focusBackground);
+}
+
+details[open] summary {
+  border-bottom: 1px solid var(--vscode-widget-border);
 }
 
 .container {
   display: flex;
   flex-direction: column;
   height: 100vh;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.icon-button {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.file-list {
-  flex: 1;
-  overflow-y: auto;
-}
-
-.chat-message {
-  margin-bottom: 10px;
-  padding: 5px;
-  border-radius: 5px;
-}
-
-.you-message {
-  background-color: var(--vscode-editor-background);
-}
-
-.ai-message {
-  background-color: var(--vscode-editorWidget-background);
-}
-
-.file-list {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-}
-
-.file-list h3 {
-  margin-bottom: 5px;
-}
-
-.file-list-content {
-  flex: 1;
-  overflow-y: auto;
-}
-
-.file-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px;
-}
-
-.file-item input[type="checkbox"] {
-  margin-right: 10px;
-}
-
-.file-item label {
-  font-size: 12px;
-  word-break: break-all;
-}
-
-input[type="text"] {
-  width: 100%;
-  padding: 5px;
-  margin-bottom: 5px;
-  background-color: var(--vscode-input-background);
-  color: var(--vscode-input-foreground);
-  border: 1px solid var(--vscode-input-border);
-  border-radius: 2px;
-}
-
-input[type="text"]::placeholder {
-  color: var(--vscode-input-placeholderForeground);
-}
-
-.file-list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
-}
-
-#selectedFilesSearch {
-  flex-grow: 1;
-  margin-right: 5px;
-}
-
-#removeAllSelectedFiles {
-  font-size: 16px;
-  padding: 2px 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--vscode-editor-foreground);
-}
-
-#removeAllSelectedFiles:hover {
-  color: var(--vscode-errorForeground);
-}
-
-.button {
-  background-color: var(--vscode-button-background);
-  color: var(--vscode-button-foreground);
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 2px;
-}
-
-.button:hover {
-  background-color: var(--vscode-button-hoverBackground);
-}
-
-#sendMessage,
-#aiSelectFiles {
-  margin-left: 5px;
-}
-
-.file-lists {
-  display: flex;
-  flex-direction: column;
-  height: 30vh;
   overflow: hidden;
 }
 
-.chat-window {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  height: 60vh;
+.files-section[open] > div {
+  display: block;
+  height: 40vh;
+  min-height: 100px;
+  max-height: 80vh;
+  overflow: auto;
 }
 
-#chatMessages {
-  flex: 1;
+.files-section:not([open]) > div {
+  display: none;
+}
+
+details[open] > :not(summary) {
+  height: calc(100% - 30px);
   overflow-y: auto;
-  padding: 10px;
 }
 
-.input-area {
-  display: flex;
-  padding: 10px;
-}
-
-#userInput {
-  flex: 1;
-  margin-right: 10px;
-  resize: vertical;
-  min-height: 40px;
-  background-color: var(--vscode-input-background);
-  color: var(--vscode-input-foreground);
-  border: 1px solid var(--vscode-input-border);
-  border-radius: 2px;
+.settings-button {
+  margin-top: auto;
+  margin-bottom: 10px;
 }
