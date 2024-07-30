@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './App.css';
-import ChatWindow from './ChatWindow';
+import ChatWindow, { Message, TextMessage, FileOperationMessage } from './ChatWindow';
 import FileList from './FileList';
 import SettingsView, { ExtensionConfig } from './SettingsView';
 import { vscode } from './utilities/vscode';
@@ -8,14 +8,25 @@ import { vscode } from './utilities/vscode';
 const App: React.FC = () => {
   const [view, setView] = useState('main');
   const [selectedFiles, setSelectedFiles] = useState(new Set<string>());
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [config, setConfig] = useState<ExtensionConfig>({});
 
   const handleMessage = useCallback((event: any) => {
     const message = event.data;
     switch (message.type) {
-      case 'aiResponse':
-        setMessages(messages => [...messages, { sender: 'AI', text: message.message }]);
+      case 'response':
+        const newMessage: Message = message.messageType === 'text'
+          ? {
+              sender: 'AI',
+              content: message.content,
+              type: 'text'
+            } as TextMessage
+          : {
+              sender: 'AI',
+              content: message.content,
+              type: 'fileOperation'
+            } as FileOperationMessage;
+        setMessages(prevMessages => [...prevMessages, newMessage]);
         break;
       case 'showSettings':
         setView('settings');
@@ -41,7 +52,12 @@ const App: React.FC = () => {
   }, [handleMessage]);
 
   const sendMessage = (message: string) => {
-    setMessages([...messages, { sender: 'You', text: message }]);
+    const newMessage: TextMessage = {
+      sender: 'You',
+      content: message,
+      type: 'text'
+    };
+    setMessages(prevMessages => [...prevMessages, newMessage]);
     vscode.postMessage({ type: 'sendMessage', message });
   };
 

@@ -1,12 +1,30 @@
-// components/ChatWindow.tsx
+import React, { useEffect, useRef, useState } from 'react';
+import { Input, Button, Space } from 'antd';
+import './ChatWindow.css';
+import FileOperation from './components/FileOperationMessage';
 
-import React, { useState, useRef, useEffect } from 'react';
-import './ChatWindow.css'
-
-interface Message {
+export interface TextMessage {
   sender: string;
-  text: string;
+  content: string;
+  type: 'text';
 }
+
+export interface FileOperationMessage {
+  sender: string;
+  content: {
+    type: string;
+    filePath: string;
+    content?: string;
+    insertionPoint?: string;
+    code?: string;
+    start?: string;
+    end?: string;
+    newCode?: string;
+  };
+  type: 'fileOperation';
+}
+
+export type Message = TextMessage | FileOperationMessage;
 
 interface ChatWindowProps {
   messages: Message[];
@@ -35,24 +53,40 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, sendMessage }) => {
     }
   };
 
+  const renderMessage = (message: Message, index: number) => {
+    if (message.type === 'fileOperation') {
+      return (
+        <div key={index} className={`chat-message ${message.sender.toLowerCase()}-message file-operation`}>
+          <strong>{message.sender}:</strong> 
+          <FileOperation operation={message.content} />
+        </div>
+      );
+    } else {
+      return (
+        <div key={index} className={`chat-message ${message.sender.toLowerCase()}-message`}>
+          <strong>{message.sender}:</strong> {message.content}
+        </div>
+      );
+    }
+  };
+
   return (
     <div className="chat-window">
       <div className="chat-messages">
-        {messages.map((message, index) => (
-          <div key={index} className={`chat-message ${message.sender.toLowerCase()}-message`}>
-            <strong>{message.sender}:</strong> {message.text}
-          </div>
-        ))}
+        {messages.map((message, index) => renderMessage(message, index))}
         <div ref={messagesEndRef} />
       </div>
       <div className="input-area">
-        <textarea
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Type your message..."
-        />
-        <button onClick={handleSendMessage} className="button">Send</button>
+        <Space.Compact style={{ width: '100%' }}>
+          <Input.TextArea
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Type your message..."
+            autoSize={{ minRows: 1, maxRows: 4 }}
+          />
+          <Button type="primary" onClick={handleSendMessage}>Send</Button>
+        </Space.Compact>
       </div>
     </div>
   );

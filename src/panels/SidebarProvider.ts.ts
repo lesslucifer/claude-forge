@@ -3,6 +3,7 @@ import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
 import { indexProject } from '../servs/projectIndex';
 import * as path from 'path';
+import { parseFileOperation } from '../servs/messageHandler';
 
 const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
 
@@ -91,6 +92,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           case "indexProject":
             await this._handleIndexProject(webview);
             return;
+          case 'sendMessage':
+            await this._handleSendMessage(webview, message.message);
+            return;
         }
       },
       undefined,
@@ -160,5 +164,25 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     }
   
     return files;
+  }
+
+  private async _handleSendMessage(webview: vscode.Webview, message: string) {
+    const fileOperation = parseFileOperation(message);
+    if (fileOperation) {
+      webview.postMessage({ 
+        type: 'response', 
+        messageType: 'fileOperation',
+        content: fileOperation 
+      });
+    } else {
+      // Process as a regular message
+      // This is a placeholder for actual message processing logic
+      const response = `Received: ${message}`;
+      webview.postMessage({ 
+        type: 'response', 
+        messageType: 'text',
+        content: response 
+      });
+    }
   }
 }
