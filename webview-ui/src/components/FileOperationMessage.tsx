@@ -24,9 +24,9 @@ const FileOperation: React.FC<FileOperationProps> = ({ operation }) => {
                 return (
                     <>
                         <Text strong>Content:</Text>
-                        {/* <Paragraph ellipsis={{ rows: 3, expandable: true, symbol: 'more' }}>
+                        <Paragraph style={{ overflow: 'auto', maxHeight: '15rem' }}>
                             <pre>{operation.content}</pre>
-                        </Paragraph> */}
+                        </Paragraph>
                     </>
                 );
             case 'insert':
@@ -35,9 +35,9 @@ const FileOperation: React.FC<FileOperationProps> = ({ operation }) => {
                         <Text strong>Insertion Point:</Text> {operation.insertionPoint}
                         <Divider />
                         <Text strong>Code:</Text>
-                        {/* <Paragraph ellipsis={{ rows: 3, expandable: true, symbol: 'more' }}>
+                        <Paragraph style={{ overflow: 'auto', maxHeight: '15rem' }}>
                             <pre>{operation.code}</pre>
-                        </Paragraph> */}
+                        </Paragraph>
                     </>
                 );
             case 'remove':
